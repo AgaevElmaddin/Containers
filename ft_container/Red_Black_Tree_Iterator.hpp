@@ -16,6 +16,7 @@ namespace ft
 		public:
 				typedef bidirectional_iterator_tag iterator_category;
 				typedef T value_type;
+				typedef std::size_t difference_type;
 				typedef Node_Ptr node_ptr;
 				typedef value_type* pointer;
 				typedef value_type& reference;
@@ -24,10 +25,7 @@ namespace ft
 		public:
 				Red_Black_Tree_Iterator(): ptr(NULL) {}
 				Red_Black_Tree_Iterator(node_ptr ptr1) : ptr(ptr1) {}
-				Red_Black_Tree_Iterator(const Red_Black_Tree_Iterator& copy)
-				{
-					this->ptr = copy.ptr;
-				}
+				Red_Black_Tree_Iterator(const Red_Black_Tree_Iterator& copy): ptr(copy.ptr) {}
 				virtual ~Red_Black_Tree_Iterator() {}
 
 				Red_Black_Tree_Iterator& operator=(const Red_Black_Tree_Iterator& copy)
@@ -40,12 +38,12 @@ namespace ft
 
 				reference operator*() const
 				{
-					return this->ptr->key;
+					return this->ptr->value;
 				}
 
 				pointer operator->() const
 				{
-					return &this->ptr->key;
+					return &(this->ptr->value);
 				}
 
 				Red_Black_Tree_Iterator& operator++()
@@ -54,7 +52,7 @@ namespace ft
 					return *this;
 				}
 
-				Red_Black_Tree_Iterator& operator++(int)
+				Red_Black_Tree_Iterator operator++(int)
 				{
 					Red_Black_Tree_Iterator tmp(*this);
 					++(*this);
@@ -67,26 +65,40 @@ namespace ft
 					return *this;
 				}
 
-				Red_Black_Tree_Iterator& operator--(int)
+				Red_Black_Tree_Iterator operator--(int)
 				{
 					Red_Black_Tree_Iterator tmp(*this);
 					--(*this);
 					return tmp;
 				}
+
+				friend bool operator==(const Red_Black_Tree_Iterator<T, Node_Ptr>& it1, const Red_Black_Tree_Iterator<T, Node_Ptr>& it2)
+				{
+					return it1.ptr == it2.ptr;
+				}
+
+				friend bool operator!=(const Red_Black_Tree_Iterator<T, Node_Ptr>& it1, const Red_Black_Tree_Iterator<T, Node_Ptr>& it2)
+				{
+					return !(it1 == it2);
+				}
+		private:
+				template <class, class, class> friend class Red_Black_Tree;
+				template <class, class> friend class Red_Black_Tree_Const_Iterator;
+				template <class, class, class, class> friend class map;
 	};
 
-	// non-member functions
-	template <class T, class Node_Ptr1, class Node_Ptr2>
-	bool operator==(const Red_Black_Tree_Iterator<T, Node_Ptr1>& it1, const Red_Black_Tree_Iterator<T, Node_Ptr2>& it2)
-	{
-		return it1.ptr == it2.ptr;
-	}
+	// // non-member functions
+	// template <class T, class Node_Ptr1, class Node_Ptr2>
+	// bool operator==(const Red_Black_Tree_Iterator<T, Node_Ptr1>& it1, const Red_Black_Tree_Iterator<T, Node_Ptr2>& it2)
+	// {
+	// 	return it1.ptr == it2.ptr;
+	// }
 
-	template <class T, class Node_Ptr1, class Node_Ptr2>
-	bool operator!=(const Red_Black_Tree_Iterator<T, Node_Ptr1>& it1, const Red_Black_Tree_Iterator<T, Node_Ptr2>& it2)
-	{
-		return !(it1 == it2);
-	}
+	// template <class T, class Node_Ptr1, class Node_Ptr2>
+	// bool operator!=(const Red_Black_Tree_Iterator<T, Node_Ptr1>& it1, const Red_Black_Tree_Iterator<T, Node_Ptr2>& it2)
+	// {
+	// 	return !(it1 == it2);
+	// }
 
 	// const iterator
 	template <class T, class Node_Ptr>
@@ -94,6 +106,7 @@ namespace ft
 	{
 		public:
 				typedef bidirectional_iterator_tag iterator_category;
+				typedef std::size_t difference_type;
 				typedef T value_type;
 				typedef Node_Ptr node_ptr;
 				typedef value_type* pointer;
@@ -120,12 +133,12 @@ namespace ft
 
 				reference operator*() const
 				{
-					return this->ptr->key;
+					return this->ptr->value;
 				}
 
 				pointer operator->() const
 				{
-					return &this->ptr->key;
+					return &this->ptr->value;
 				}
 
 				Red_Black_Tree_Const_Iterator& operator++()
@@ -134,7 +147,7 @@ namespace ft
 					return *this;
 				}
 
-				Red_Black_Tree_Const_Iterator& operator++(int)
+				Red_Black_Tree_Const_Iterator operator++(int)
 				{
 					Red_Black_Tree_Const_Iterator tmp(*this);
 					++(*this);
@@ -147,26 +160,39 @@ namespace ft
 					return *this;
 				}
 
-				Red_Black_Tree_Const_Iterator& operator--(int)
+				Red_Black_Tree_Const_Iterator operator--(int)
 				{
 					Red_Black_Tree_Const_Iterator tmp(*this);
 					--(*this);
 					return tmp;
 				}
+
+				friend bool operator==(const Red_Black_Tree_Const_Iterator<T, Node_Ptr>& it1, const Red_Black_Tree_Const_Iterator<T, Node_Ptr>& it2)
+				{
+					return it1.ptr == it2.ptr;
+				}
+
+				friend bool operator!=(const Red_Black_Tree_Const_Iterator<T, Node_Ptr>& it1, const Red_Black_Tree_Const_Iterator<T, Node_Ptr>& it2)
+				{
+					return !(it1 == it2);
+				}
+		private:
+				template <class, class, class> friend class Red_Black_Tree;
+				template <class, class, class, class> friend class map;
 	};
 
 	// non-member functions
-	template <class T, class Node_Ptr1, class Node_Ptr2>
-	bool operator==(const Red_Black_Tree_Const_Iterator<T, Node_Ptr1>& it1, const Red_Black_Tree_Const_Iterator<T, Node_Ptr2>& it2)
-	{
-		return it1.ptr == it2.ptr;
-	}
+	// template <class T, class Node_Ptr1, class Node_Ptr2>
+	// bool operator==(const Red_Black_Tree_Const_Iterator<T, Node_Ptr1>& it1, const Red_Black_Tree_Const_Iterator<T, Node_Ptr2>& it2)
+	// {
+	// 	return it1.ptr == it2.ptr;
+	// }
 
-	template <class T, class Node_Ptr1, class Node_Ptr2>
-	bool operator!=(const Red_Black_Tree_Const_Iterator<T, Node_Ptr1>& it1, const Red_Black_Tree_Const_Iterator<T, Node_Ptr2>& it2)
-	{
-		return !(it1 == it2);
-	}
+	// template <class T, class Node_Ptr1, class Node_Ptr2>
+	// bool operator!=(const Red_Black_Tree_Const_Iterator<T, Node_Ptr1>& it1, const Red_Black_Tree_Const_Iterator<T, Node_Ptr2>& it2)
+	// {
+	// 	return !(it1 == it2);
+	// }
 }
 
 #endif

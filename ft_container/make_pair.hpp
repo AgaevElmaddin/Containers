@@ -16,7 +16,7 @@ namespace ft
 		T2 second;
 
 		// member functions
-		pair(): first(0), second(0) {} // default constructor
+		pair(): first(first_type()), second(second_type()) {} // default constructor
 		pair(T1 const& t1, T2 const& t2): first(t1), second(t2) {} // constructor with parameters
 		template <class U1, class U2>
 		pair(const pair<U1, U2>& p): first(p.first), second(p.second) {} // copy constructor
