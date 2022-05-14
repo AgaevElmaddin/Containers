@@ -221,6 +221,7 @@ namespace ft
 				// Allocator and value_compare
 				allocator_type get_allocator() const;
 				value_compare get_value_compare() const;
+				// set fuctions
 	};
 	////////////////////////////RBT Class////////////////////////////
 
@@ -271,7 +272,7 @@ namespace ft
 		node_ptr min_node = tree_minimum(T_root);
 		node_ptr bottom_ptr = min_node->left;
 		if (bottom_ptr == NULL)
-		return ;
+			return ;
 		bottom_ptr->p = NULL;
 		bottom_ptr->left = NULL;
 		bottom_ptr->right = NULL;
@@ -656,8 +657,8 @@ namespace ft
 	}
 
 	template <class T, class Compare, class Allocator>
-	Red_Black_Tree<T, Compare, Allocator>::Red_Black_Tree(const Red_Black_Tree& copy): T_root(copy.T_root), cmp(copy.cmp),
-						alloc(copy.alloc), _size(copy._size)
+	Red_Black_Tree<T, Compare, Allocator>::Red_Black_Tree(const Red_Black_Tree& copy): T_root(NULL), cmp(copy.cmp),
+						alloc(copy.alloc), _size(0)
 	{
 		sentinel_end();
 		sentinel_bottom();

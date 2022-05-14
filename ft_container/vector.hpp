@@ -58,8 +58,10 @@ namespace ft
 				explicit vector(const allocator_type& alloc = allocator_type()); // default constructor *****************************************************//
 				explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()); // fill constructor ****//
 				template <class InputIterator> // range constructor ***************************************************************************************//
-				vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
-						typename enable_if<std::is_integral<InputIterator>::value_type, InputIterator>::type* = 0); // *********************************//
+				vector(InputIterator first,
+				typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last,
+				const allocator_type& alloc = allocator_type()
+						); // *********************************//
 				vector(const vector& x); // copy constructor ******************************************************************************************//
 				~vector(); // destructor *************************************************************************************************************//
 				//***********************************************************************************************************************************//
@@ -159,9 +161,10 @@ namespace ft
 	   if InputIterator is an integral type.*/
 	template <class T, class Allocator>
 	template <class InputIterator>
+	// ft::enable<ft::is_iterator<ft::iterator_traits<InputIterator>::iterator_category>::value_type, InputIterator>::type
 	vector<T, Allocator>::vector(InputIterator first,
-						InputIterator last,
-						const allocator_type& alloc, typename enable_if<std::is_integral<InputIterator>::value_type, InputIterator>::type*):alloc(alloc)
+	typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last,
+						const allocator_type& alloc):alloc(alloc)
 	{
 		difference_type n = ft::distance(first, last);
 		v_begin = this->alloc.allocate(n);

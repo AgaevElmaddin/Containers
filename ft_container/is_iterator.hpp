@@ -9,7 +9,7 @@ namespace ft
 	template<class T>
 	struct is_iterator: public false_type
 	{
-
+		
 	};
 
 	// 1) input iterator
