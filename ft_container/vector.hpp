@@ -44,8 +44,10 @@ namespace ft
 				typedef typename Allocator::const_pointer const_pointer;
 				// A type that provides a random-access iterator that can read or modify any element in a vector.
 				// Random-access iterators are the ones whose functionality is same as pointers
+				// typedef std::__wrap_iter<pointer> iterator;
 				typedef typename ft::iterator_traits<pointer>::pointer iterator;
 				// A type that provides a random-access iterator that can read a const element in a vector
+				// typedef std::__wrap_iter<const_pointer> const_iterator;
 				typedef typename ft::iterator_traits<const_pointer>::pointer const_iterator;
 				// A type that provides a random-access iterator that can read or modify any element in a reversed vector
 				typedef ft::reverse_iterator<iterator> reverse_iterator;
@@ -239,13 +241,13 @@ namespace ft
 	template <class T, class Allocator>							//********************************************************//
 	typename vector <T, Allocator>::iterator vector<T, Allocator>::end() // return iterator to end **********************//
 	{														  //********************************************************//
-		return (vector <T, Allocator>::iterator)this->v_end; //********************************************************//
+		return iterator(this->v_end); //********************************************************//
 	}														//********************************************************//
 
 	template <class T, class Allocator>					  //********************************************************//
 	typename vector <T, Allocator>::const_iterator vector<T, Allocator>::end() const //****************************//
 	{													//********************** return const_iterator to end ****//
-		return (vector <T, Allocator>::iterator)this->v_end; //**************************************************//
+		return const_iterator(this->v_end); //**************************************************//
 	}												  //********************************************************//
 
 	template <class T, class Allocator>				//********************************************************//
@@ -490,7 +492,8 @@ namespace ft
 	void	vector<T, Allocator>::pop_back()
 	{
 		this->alloc.destroy(this->v_end - 1);
-		--this->v_end;
+		std::cout << "here" << std::endl;
+		--(this->v_end);
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/* Insert elements. The vector is extended by inserting new elements before the element at the specified

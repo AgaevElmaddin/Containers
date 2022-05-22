@@ -7,7 +7,7 @@ OBJS = $(patsubst %.cpp, %.o, $(SRCS))
 HEADER = enable_if.hpp equal.hpp is_integral.hpp iterators_traits.hpp \
 			lexicographical_compare.hpp make_pair.hpp reverse_iterator.hpp \
 			conditional.hpp vector.hpp Red_Black_Tree_Iterator.hpp \
-			Red_Black_Tree.hpp map.hpp
+			Red_Black_Tree.hpp map.hpp set.hpp
 
 FLAGS = -Wall -Wextra -Werror -g -std=c++98
 

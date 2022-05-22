@@ -2,7 +2,16 @@
 # define SET_HPP
 
 #include "Red_Black_Tree.hpp"
-#include <set>
+#include "make_pair.hpp"
+#include "Red_Black_Tree_Iterator.hpp"
+#include "reverse_iterator.hpp"
+#include <functional> // for std::less
+#include <memory> // for std::allocator
+#include <limits>
+#include <algorithm>
+#include <cstddef>
+#include "lexicographical_compare.hpp"
+#include "equal.hpp"
 
 namespace ft
 {
@@ -41,17 +50,18 @@ namespace ft
 				//******************************************************************************************************//
 
 				//******************************************************************************************************//
+				template <class InputIterator>
 				set(InputIterator first, InputIterator last, const key_compare& comp = key_compare(),
 					const allocator_type& alloc = allocator_type()): rbt(comp, alloc) // range constructor
 				{
-					insert(first, last)
+					insert(first, last);
 				}
 				//******************************************************************************************************//
 
 				//******************************************************************************************************//
 				set(const set& x): rbt(x.rbt) // copy constructor
 				{
-					insert(x.begin(), x.end())
+					insert(x.begin(), x.end());
 				}
 				//******************************************************************************************************//
 
@@ -61,7 +71,9 @@ namespace ft
 					if (this == &x)
 						return *this;
 					rbt.clear();
-					this = rbt(x);
+					//this = rbt(x);
+					rbt.cmp = x.rbt.get_value_compare();
+					rbt.alloc = x.rbt.get_allocator();
 					insert(x.begin(), x.end());
 					return *this;
 				}
@@ -69,10 +81,7 @@ namespace ft
 
 				//******************************************************************************************************//
 				~set() // destructor
-				{
-					rbt.clear();
-					rbt.clear_bottom_end();
-				}
+				{}
 				//******************************************************************************************************//
 
 				//******************************************************************************************************//
@@ -218,7 +227,7 @@ namespace ft
 				//******************************************************************************************************//
 
 				//******************************************************************************************************//
-				void swap(map& other) // swap
+				void swap(set& other) // swap
 				{
 					rbt.swap(other.rbt);
 				}
@@ -228,7 +237,7 @@ namespace ft
 				//******************************************************************************************************//
 				key_compare key_comp() const // key_comp
 				{
-					rbt.get_value_compare();
+					return rbt.get_value_compare();
 				}
 
 				value_compare value_comp() const // value_comp
@@ -241,50 +250,50 @@ namespace ft
 				//******************************************************************************************************//
 				size_type count(const key_type& key) const // count
 				{
-					return rbt.count(key);
+					return rbt.count_in_set(key);
 				}
 				//******************************************************************************************************//
 
 				//******************************************************************************************************//
 				iterator find(const key_type& key) // find
 				{
-					return rbt.find(key);
+					return rbt.find_in_set(key);
 				}
 				//******************************************************************************************************//
 
 				//******************************************************************************************************//
 				pair<iterator, iterator> equal_range(const key_type& key) // equal_range
 				{
-					return rbt.equal_range(key);
+					return rbt.equal_range_in_set(key);
 				}
 
 				pair<const_iterator, const_iterator> equal_range(const key_type& key) const // equal_range const
 				{
-					return rbt.equal_range(key);
+					return rbt.equal_range_in_set(key);
 				}
 				//******************************************************************************************************//
 
 				//******************************************************************************************************//
 				iterator lower_bound(const key_type& key) // lower_bound
 				{
-					return rbt.lower_bound(key);
+					return rbt.lower_bound_in_set(key);
 				}
 
 				const_iterator lower_bound(const key_type& key) const // lower_bound const
 				{
-					return rbt.lower_bound(key);
+					return rbt.lower_bound_in_set(key);
 				}
 				//******************************************************************************************************//
 
 				//******************************************************************************************************//
 				iterator upper_bound(const key_type& key) // upper_bound
 				{
-					return rbt.upper_bound(key);
+					return rbt.upper_bound_in_set(key);
 				}
 
 				const_iterator upper_bound(const key_type& key) const // upper_bound const
 				{
-					return rbt.upper_bound(key);
+					return rbt.upper_bound_in_set(key);
 				}
 				//******************************************************************************************************//
 	};

@@ -173,6 +173,7 @@ namespace ft
 				void rb_delete(node_ptr z);
 				void rb_delete_fixup(node_ptr z);
 				template <class, class, class, class> friend class map;
+				template <class, class, class> friend class set;
 		public:
 				// map fuctions
 				// iterators
@@ -222,6 +223,25 @@ namespace ft
 				allocator_type get_allocator() const;
 				value_compare get_value_compare() const;
 				// set fuctions
+				// operations
+				template <class Key>
+				size_type count_in_set(const Key& key) const;
+				template <class Key>
+				iterator find_in_set(const Key& key);
+				template <class Key>
+				const_iterator find_in_set(const Key& key) const;
+				template <class Key>
+				iterator lower_bound_in_set(const Key& key);
+				template <class Key>
+				const_iterator lower_bound_in_set(const Key& key) const;
+				template <class Key>
+				iterator upper_bound_in_set(const Key& key);
+				template <class Key>
+				const_iterator upper_bound_in_set(const Key& key) const;
+				template <class Key>
+				pair<iterator, iterator> equal_range_in_set(const Key& key);
+				template <class Key>
+				pair<const_iterator, const_iterator> equal_range_in_set(const Key& key) const;
 	};
 	////////////////////////////RBT Class////////////////////////////
 
@@ -515,6 +535,14 @@ namespace ft
 	{
 		while (x != T_root && x != NULL && x->is_black == 1)
 		{
+			// bool is_allocated = 0;
+			// if (x->p->left == NULL)
+			// {
+			// 	x->p->left = node_alloc.allocate(1);
+			// 	alloc.construct(&(x->p->left->value), value_type());
+			// 	x->p->left->is_bottom_end = 0;
+			// 	is_allocated = 1;
+			// }
 			if (x == x->p->left) // if x is left child of his parent
 			{
 				node_ptr w = x->p->right; // (w is x's sibling)
@@ -617,7 +645,7 @@ namespace ft
 			}
 			if (y->p == z) // If z is parent of y,
 				x->p = y; // then y is parent of x
-			else// Here, we have to put this minimum node (y) in the place of z.
+			else // Here, we have to put this minimum node (y) in the place of z.
 			{
 				transplant(y, y->right); // Firstly, we will transplant the right of y to y
 				y->right = z->right; // and then take the right subtree of z and make it the right subtree of y.
@@ -630,6 +658,9 @@ namespace ft
 		}
 		if (y_original_color == 1) // because it breaks the rule number 5, 4 and 2 - we need to fix this since we delete a black node.
 			rb_delete_fixup(x);
+		// alloc.destroy(&z->value);
+		// node_alloc.deallocate(z, 1);
+		// z = NULL;
 		if (is_allocated == 1)
 		{
 			alloc.destroy(&x->value);
@@ -1057,6 +1088,173 @@ namespace ft
 		return cmp;
 	}
 	////////////////////////////allocator and value_compare/////////////////////////////////////
+
+	////////////////////////////////////set functions/////////////////////////////////////
+	////////////////////////////////////operations///////////////////////////////////////
+	template <class T, class Compare, class Allocator>
+	template <class Key>
+	typename Red_Black_Tree<T, Compare, Allocator>::size_type
+	Red_Black_Tree<T, Compare, Allocator>::count_in_set(const Key& key) const
+	{
+		node_ptr tmp = T_root;
+		while (tmp != NULL)
+		{
+			if (cmp(key, tmp->value) == 1)
+				tmp = tmp->left;
+			else if (cmp(tmp->value, key) == 1)
+				tmp = tmp->right;
+			else
+				return 1;
+		}
+		return 0;
+	}
+
+	template <class T, class Compare, class Allocator>
+	template <class Key>
+	typename Red_Black_Tree<T, Compare, Allocator>::iterator
+	Red_Black_Tree<T, Compare, Allocator>::find_in_set(const Key& key)
+	{
+		iterator it = lower_bound_in_set(key);
+		if (it != end() && cmp(key, (*it)) == 0)
+			return it;
+		return end();
+	}
+
+	template <class T, class Compare, class Allocator>
+	template <class Key>
+	typename Red_Black_Tree<T, Compare, Allocator>::const_iterator
+	Red_Black_Tree<T, Compare, Allocator>::find_in_set(const Key& key) const
+	{
+		iterator it = lower_bound_in_set(key);
+		if (it != end() && cmp(key, (*it)) == 0)
+			return it;
+		return end();
+	}
+
+	template <class T, class Compare, class Allocator>
+	template <class Key>
+	typename Red_Black_Tree<T, Compare, Allocator>::iterator
+	Red_Black_Tree<T, Compare, Allocator>::lower_bound_in_set(const Key& key)
+	{
+		node_ptr tmp = T_root;
+		node_ptr res = link_end_node();
+		while(tmp != NULL)
+		{
+			if (cmp(tmp->value, key) == 0)
+			{
+				res = tmp;
+				tmp = tmp->left;
+			}
+			else
+				tmp = tmp->right;
+		}
+		return (iterator)(res);
+	}
+
+	template <class T, class Compare, class Allocator>
+	template <class Key>
+	typename Red_Black_Tree<T, Compare, Allocator>::const_iterator
+	Red_Black_Tree<T, Compare, Allocator>::lower_bound_in_set(const Key& key) const
+	{
+		node_ptr tmp = T_root;
+		node_ptr res = link_end_node();
+		while (tmp != NULL)
+		{
+			if (cmp(tmp->value, key) == 0) // 0 = false
+			{
+				res = tmp;
+				tmp = tmp->left;
+			}
+			else
+				tmp = tmp->right;
+		}
+		return (const_iterator)(res);
+	}
+
+	template <class T, class Compare, class Allocator>
+	template <class Key>
+	typename Red_Black_Tree<T, Compare, Allocator>::iterator
+	Red_Black_Tree<T, Compare, Allocator>::upper_bound_in_set(const Key& key)
+	{
+		node_ptr tmp = T_root;
+		node_ptr res = link_end_node();
+		while (tmp != NULL)
+		{
+			if (cmp(key, tmp->value) == 1) // 1 = true
+			{
+				res = tmp;
+				tmp = tmp->left;
+			}
+			else
+				tmp = tmp->right;
+		}
+		return (iterator)(res);
+	}
+
+	template <class T, class Compare, class Allocator>
+	template <class Key>
+	typename Red_Black_Tree<T, Compare, Allocator>::const_iterator
+	Red_Black_Tree<T, Compare, Allocator>::upper_bound_in_set(const Key& key) const
+	{
+		node_ptr tmp = T_root;
+		node_ptr res = link_end_node();
+		while (tmp != NULL)
+		{
+			if (cmp(key, tmp->value) == 1) // 1 = true
+			{
+				res = tmp;
+				tmp = tmp->left;
+			}
+			else
+				tmp = tmp->right;
+		}
+		return (const_iterator)(res);
+	}
+
+	template <class T, class Compare, class Allocator>
+	template <class Key>
+	pair<typename Red_Black_Tree<T, Compare, Allocator>::iterator, typename Red_Black_Tree<T, Compare, Allocator>::iterator>
+	Red_Black_Tree<T, Compare, Allocator>::equal_range_in_set(const Key& key)
+	{
+		node_ptr tmp = T_root;
+		node_ptr res = link_end_node();
+		while (tmp != NULL)
+		{
+			if (cmp(key, tmp->value) == 1)
+			{
+				res = tmp;
+				tmp = tmp->left;
+			}
+			else if (cmp(tmp->value, key) == 1)
+				tmp = tmp->right;
+			else
+				return pair<iterator, iterator>(iterator(tmp), iterator(tmp->right != NULL ? tree_minimum(tmp->right) : res));
+		}
+		return pair<iterator, iterator>(iterator(res), iterator(res));
+	}
+
+	template <class T, class Compare, class Allocator>
+	template <class Key>
+	pair<typename Red_Black_Tree<T, Compare, Allocator>::const_iterator, typename Red_Black_Tree<T, Compare, Allocator>::const_iterator>
+	Red_Black_Tree<T, Compare, Allocator>::equal_range_in_set(const Key& key) const
+	{
+		node_ptr tmp = T_root;
+		node_ptr res = link_end_node();
+		while (tmp != NULL)
+		{
+			if (cmp(key, tmp->value) == 1)
+			{
+				res = tmp;
+				tmp = tmp->left;
+			}
+			else if (cmp(tmp->value, key) == 1)
+				tmp = tmp->right;
+			else
+				return pair<const_iterator, const_iterator>(const_iterator(tmp), const_iterator(tmp->right != NULL ? tree_minimum(tmp->right) : res));
+		}
+		return pair<const_iterator, const_iterator>(const_iterator(res), const_iterator(res));
+	}
+	////////////////////////////////////operations///////////////////////////////////////
 }
 
 #endif
