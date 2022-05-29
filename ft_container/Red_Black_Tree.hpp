@@ -4,6 +4,7 @@
 #include <algorithm>
 #include "Red_Black_Tree_Iterator.hpp"
 #include "map.hpp"
+#include "reverse_iterator.hpp"
 
 // about sentinel nodes (bottom and end): https://kaba.hilvi.org/pastel-1.5.0/pastel/sys/redblacktree/redblacktree.htm
 

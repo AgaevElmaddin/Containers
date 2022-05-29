@@ -492,7 +492,6 @@ namespace ft
 	void	vector<T, Allocator>::pop_back()
 	{
 		this->alloc.destroy(this->v_end - 1);
-		std::cout << "here" << std::endl;
 		--(this->v_end);
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -535,20 +534,20 @@ namespace ft
 	template <class T, class Allocator>
 	void	vector<T, Allocator>::insert(iterator position, size_type n, const value_type& val)
 	{
-		 if (position == this->v_end - 1)
+		 if (position == this->v_end)
 		 {
-				pointer new_begin = this->alloc.allocate(n + this->size());
-				size_type i = 0;
-				size_type j = 0;
-				for ( ; i < n; ++i, ++j)
-					this->alloc.construct(new_begin + i, val);
-				for ( ; i < n + this->size(); ++i, ++j)
-					this->alloc.construct(new_begin + i, *(this->v_end - 1));
-				 this->clear();
-				 this->alloc.deallocate(this->v_begin, this->size());
-				this->v_begin = new_begin;
-				this->v_end = new_begin + i;
-				this->v_capacity_end = new_begin + i + j;
+			pointer new_begin = this->alloc.allocate(n + this->size());
+			size_type i = 0;
+			size_type j = 0;
+			for ( ; i < n; ++i, ++j)
+				this->alloc.construct(new_begin + i, val);
+			for ( ; i < n + this->size(); ++i, ++j)
+				this->alloc.construct(new_begin + i, *(this->v_end - 1));
+			this->clear();
+			this->alloc.deallocate(this->v_begin, this->size());
+			this->v_begin = new_begin;
+			this->v_end = new_begin + i;
+			this->v_capacity_end = new_begin + i + j;
 		 }
 		else
 		{
@@ -628,6 +627,7 @@ namespace ft
 			for ( ; i < this->size(); ++i)
 				this->alloc.construct(new_begin + i - 1, *(this->v_begin + i));
 			this->clear();
+			this->alloc.deallocate(this->v_begin, capacity);
 			this->v_begin = new_begin;
 			this->v_end = new_begin + i - 1;
 			this->v_capacity_end = new_begin + capacity;
@@ -649,6 +649,7 @@ namespace ft
 		for ( ; i < this->size(); ++i)
 			this->alloc.construct(new_begin + i - sequence_erase, *(this->v_begin + i));
 		this->clear();
+		this->alloc.deallocate(this->v_begin, capacity);
 		this->v_begin = new_begin;
 		this->v_end = new_begin + i - sequence_erase;
 		this->v_capacity_end = new_begin + capacity;
